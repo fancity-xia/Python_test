@@ -6,6 +6,10 @@ import sys
 
 __author__="xiazhanfeng"
 
+'''
+针对有序网络进行递归获得整个网络结构并输出成文件，也可查询任意节点所在网络集合
+'''
+
 
 def usage():
 	print("Usage:%s -i 输入关系网络文件(netfile) -o 输出网络code和对应连线(output) -c 任意一个节点包含的网络路径(code) -h 帮助说明" %(sys.argv[0]))
@@ -31,6 +35,7 @@ for op, value in opts:
 
 
 class net_analysis():
+	
 	def __init__(self):
 		#值初始化
 		self.init_dict={}
@@ -38,6 +43,8 @@ class net_analysis():
 		self.root=set()
 		self.association=set()
 		self.code_dict={}
+		
+		
 	def read_net(self,infile):
 		#确定起始根点
 		#存取初始化字典
@@ -62,6 +69,7 @@ class net_analysis():
 				else:
 					self.init_dict[net_lines[0]]=set()
 					self.init_dict[net_lines[0]].add(net_lines[1])
+					
 					
 	def recursion_net(self):
 		#进行递归循环遍历得到线路图
@@ -88,6 +96,7 @@ class net_analysis():
 			#sys.exit()
 			#self.association[r]=strings
 
+			
 	def read_recursion(self,circle_dict,string):
 		#association=set()
 		for i,k in circle_dict.items():
@@ -101,6 +110,7 @@ class net_analysis():
 				self.read_recursion(n,index)
 		#return association
 
+		
 	def recursion(self,node):
 		dicts={}
 		for k in node:
@@ -110,6 +120,8 @@ class net_analysis():
 			else:
 				dicts[k]=1
 		return dicts
+
+	
 	def save_dict(self):
 		for ele in self.association:
 			ele=ele.strip("\t")
@@ -122,6 +134,7 @@ class net_analysis():
 					self.code_dict[element]=set()
 					self.code_dict[element].add(ele)
 				
+	
 	def net_ouput(self,outfile):
 		with open(outfile,"w") as out:
 			for i in self.association:
@@ -134,7 +147,6 @@ if __name__ == "__main__" :
 	#for i,l in net.association.items():
 	#	print(i+"\t"+l
 	net.net_ouput(output_file)
-	
 	net.save_dict()
 	if code:
 		for k,v in net.code_dict.items():
